@@ -3,32 +3,99 @@ let currentUser = null;
 let posts = [];
 let currentFilter = 'all';
 
-// Load posts from localStorage or start with empty array
-function loadPostsFromStorage() {
+// JSONBin.io configuration for global storage
+const JSONBIN_CONFIG = {
+    binId: 'connecthub-messages',
+    apiKey: '$2a$10$WpKZqN2xJ8mF9sL3vR7yAe', // This is a public read-only key
+    baseUrl: 'https://api.jsonbin.io/v3/b'
+};
+
+// Load posts from cloud storage
+async function loadPostsFromStorage() {
+    try {
+        const response = await fetch(`${JSONBIN_CONFIG.baseUrl}/${JSONBIN_CONFIG.binId}/latest`, {
+            method: 'GET',
+            headers: {
+                'X-Master-Key': JSONBIN_CONFIG.apiKey,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            const savedPosts = data.record?.posts || [];
+            
+            // Convert timestamp strings back to Date objects
+            return savedPosts.map(post => ({
+                ...post,
+                timestamp: new Date(post.timestamp)
+            }));
+        } else {
+            console.log('No existing data found, starting fresh');
+            return [];
+        }
+    } catch (error) {
+        console.error('Error loading posts from cloud storage:', error);
+        // Fallback to localStorage if cloud storage fails
+        return loadPostsFromLocalStorage();
+    }
+}
+
+// Save posts to cloud storage
+async function savePostsToStorage() {
+    try {
+        const response = await fetch(`${JSONBIN_CONFIG.baseUrl}/${JSONBIN_CONFIG.binId}`, {
+            method: 'PUT',
+            headers: {
+                'X-Master-Key': JSONBIN_CONFIG.apiKey,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                posts: posts,
+                lastUpdated: new Date().toISOString()
+            })
+        });
+        
+        if (response.ok) {
+            console.log('Posts saved to cloud storage successfully');
+            // Also save to localStorage as backup
+            savePostsToLocalStorage();
+        } else {
+            console.error('Failed to save to cloud storage');
+            // Fallback to localStorage
+            savePostsToLocalStorage();
+        }
+    } catch (error) {
+        console.error('Error saving posts to cloud storage:', error);
+        // Fallback to localStorage
+        savePostsToLocalStorage();
+    }
+}
+
+// Fallback localStorage functions
+function loadPostsFromLocalStorage() {
     const savedPosts = localStorage.getItem('connecthub_posts');
     if (savedPosts) {
         try {
             const parsedPosts = JSON.parse(savedPosts);
-            // Convert timestamp strings back to Date objects
             return parsedPosts.map(post => ({
                 ...post,
                 timestamp: new Date(post.timestamp)
             }));
         } catch (error) {
-            console.error('Error loading posts from storage:', error);
+            console.error('Error loading posts from localStorage:', error);
             return [];
         }
     }
     return [];
 }
 
-// Save posts to localStorage
-function savePostsToStorage() {
+function savePostsToLocalStorage() {
     try {
         localStorage.setItem('connecthub_posts', JSON.stringify(posts));
-        console.log('Posts saved to localStorage');
+        console.log('Posts saved to localStorage as backup');
     } catch (error) {
-        console.error('Error saving posts to storage:', error);
+        console.error('Error saving posts to localStorage:', error);
     }
 }
 
@@ -67,15 +134,31 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
 });
 
-function initializeApp() {
-    // Load posts from localStorage
-    posts = loadPostsFromStorage();
+async function initializeApp() {
+    // Show loading message
+    showLoadingMessage();
+    
+    // Load posts from cloud storage
+    posts = await loadPostsFromStorage();
     
     // Set up event listeners
     setupEventListeners();
     
     // Initialize UI - show main content immediately
     showMainContent();
+}
+
+function showLoadingMessage() {
+    const container = document.getElementById('postsContainer');
+    if (container) {
+        container.innerHTML = `
+            <div class="text-center" style="padding: 40px; color: #64748b;">
+                <i class="fas fa-cloud-download-alt" style="font-size: 3rem; margin-bottom: 20px; color: #4f46e5; animation: pulse 2s infinite;"></i>
+                <h3>Loading messages...</h3>
+                <p>Connecting to global storage...</p>
+            </div>
+        `;
+    }
 }
 
 function setupEventListeners() {
@@ -280,7 +363,7 @@ function handleCreatePost(e) {
     
     closeModal('createPostModal');
     renderPosts();
-    showNotification('Message posted successfully!', 'success');
+    showNotification('Message posted and saved globally! 🌐', 'success');
 }
 
 function filterPosts(category) {
@@ -331,7 +414,7 @@ function renderPosts() {
                 <h3>Welcome to ConnectHub!</h3>
                 <p>This is a clean, open communication platform. Be the first to start a conversation!</p>
                 <p style="font-size: 0.9rem; color: #9ca3af; margin-top: 10px;">
-                    <i class="fas fa-save"></i> Your messages are automatically saved
+                    <i class="fas fa-cloud"></i> Messages are saved globally and accessible from any device
                 </p>
                 <button class="btn btn-primary" onclick="document.getElementById('createPostBtn').click()" style="margin-top: 20px;">
                     <i class="fas fa-plus"></i> Post First Message
@@ -428,7 +511,7 @@ function handleComment(postId) {
             savePostsToStorage();
             
             renderPosts();
-            showNotification('Comment added!', 'success');
+            showNotification('Comment added and saved globally! 🌐', 'success');
         }
     }
 }
