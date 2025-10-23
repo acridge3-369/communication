@@ -3,61 +3,67 @@ let currentUser = null;
 let posts = [];
 let currentFilter = 'all';
 
-// Sample data for demonstration
+// Sample messages for demonstration
 const samplePosts = [
     {
         id: 1,
-        title: "Building a Sustainable Garden in My Backyard",
-        content: "I want to create a sustainable garden that provides fresh vegetables for my family while being environmentally friendly. Looking for advice on composting, water conservation, and organic pest control methods.",
-        category: "goals",
+        title: "Team Meeting Tomorrow",
+        content: "Hi everyone! Just a reminder that we have our weekly team meeting tomorrow at 2 PM. Please prepare your project updates and bring any questions or concerns you'd like to discuss. Looking forward to seeing everyone there!",
+        category: "announcement",
         author: "Sarah Johnson",
         authorInitial: "SJ",
         timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-        likes: 12,
-        comments: 5,
-        tags: ["gardening", "sustainability", "organic"],
+        likes: 8,
+        comments: 3,
+        tags: ["meeting", "team", "reminder"],
         liked: false
     },
     {
         id: 2,
-        title: "Mobile App for Local Community Events",
-        content: "I have an idea for a mobile app that helps people discover local community events, volunteer opportunities, and neighborhood activities. Would love to collaborate with developers and get community feedback on features.",
-        category: "ideas",
+        title: "New Project Ideas Discussion",
+        content: "I've been thinking about some new project ideas for our upcoming quarter. Would love to get everyone's input on potential features we could develop. Let's brainstorm together!",
+        category: "idea",
         author: "Mike Chen",
         authorInitial: "MC",
         timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
-        likes: 8,
-        comments: 3,
-        tags: ["mobile app", "community", "volunteering"],
+        likes: 12,
+        comments: 7,
+        tags: ["projects", "brainstorming", "ideas"],
         liked: false
     },
     {
         id: 3,
-        title: "Learning Spanish - 6 Month Plan",
-        content: "My goal is to become conversational in Spanish within 6 months. I've created a structured plan with daily practice, weekly goals, and monthly milestones. Looking for study buddies or native speakers to practice with!",
-        category: "plans",
+        title: "Question about the New System",
+        content: "Has anyone had a chance to test the new communication system yet? I'm having some issues with the message notifications. Any tips or solutions would be greatly appreciated!",
+        category: "question",
         author: "Emily Rodriguez",
         authorInitial: "ER",
         timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000), // 6 hours ago
-        likes: 15,
-        comments: 8,
-        tags: ["language learning", "spanish", "self-improvement"],
+        likes: 5,
+        comments: 4,
+        tags: ["technical", "help", "system"],
         liked: false
     },
     {
         id: 4,
-        title: "Starting a Local Book Club",
-        content: "I'm planning to start a monthly book club in my neighborhood focused on diverse authors and contemporary fiction. Need help organizing the first meeting and choosing our first book.",
-        category: "plans",
+        title: "Great work on the presentation!",
+        content: "Just wanted to say great job to everyone who worked on yesterday's client presentation. The feedback was overwhelmingly positive, and they're excited to move forward with the project. Well done team!",
+        category: "general",
         author: "David Kim",
         authorInitial: "DK",
         timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000), // 8 hours ago
-        likes: 6,
-        comments: 4,
-        tags: ["book club", "reading", "community"],
+        likes: 15,
+        comments: 6,
+        tags: ["success", "teamwork", "celebration"],
         liked: false
     }
 ];
+
+// Valid credentials
+const validCredentials = {
+    username: "username",
+    password: "Interesting123-"
+};
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
@@ -163,25 +169,44 @@ function switchAuthTab(tab) {
 
 function handleLogin(e) {
     e.preventDefault();
-    const email = document.getElementById('loginEmail').value;
+    const username = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
     
     // Simple validation
-    if (!email || !password) {
+    if (!username || !password) {
         alert('Please fill in all fields');
         return;
     }
     
-    // Simulate login
-    currentUser = {
-        name: email.split('@')[0],
-        email: email,
-        initial: email.split('@')[0].charAt(0).toUpperCase()
-    };
-    
-    closeModal('authModal');
-    updateUI();
-    showNotification('Welcome back!', 'success');
+    // Check credentials
+    if (username === validCredentials.username && password === validCredentials.password) {
+        // Successful login
+        currentUser = {
+            name: "username",
+            username: username,
+            initial: "U"
+        };
+        
+        closeModal('authModal');
+        updateUI();
+        showNotification('Welcome to ConnectHub! 🎉', 'success');
+        
+        // Add cool login animation
+        document.body.style.animation = 'loginSuccess 0.5s ease';
+        setTimeout(() => {
+            document.body.style.animation = '';
+        }, 500);
+    } else {
+        // Failed login
+        showNotification('Invalid credentials. Please try again.', 'error');
+        
+        // Add shake animation to modal
+        const modal = document.getElementById('authModal');
+        modal.style.animation = 'shake 0.5s ease';
+        setTimeout(() => {
+            modal.style.animation = '';
+        }, 500);
+    }
 }
 
 function handleSignup(e) {
@@ -319,16 +344,17 @@ function renderPosts() {
 function createPostHTML(post) {
     const timeAgo = getTimeAgo(post.timestamp);
     const categoryEmoji = {
-        'ideas': '💡',
-        'plans': '📋',
-        'goals': '🎯'
+        'general': '💬',
+        'announcement': '📢',
+        'question': '❓',
+        'idea': '💡'
     };
     
     return `
         <div class="post-card" data-post-id="${post.id}">
             <div class="post-header">
                 <div class="post-avatar">${post.authorInitial}</div>
-                <div class="post-meta">
+                <div class="post-meta contact-info">
                     <div class="post-author">${post.author}</div>
                     <div class="post-time">${timeAgo}</div>
                 </div>
@@ -353,8 +379,8 @@ function createPostHTML(post) {
                     <span>${post.comments}</span>
                 </div>
                 <div class="post-action">
-                    <i class="fas fa-share"></i>
-                    <span>Share</span>
+                    <i class="fas fa-reply"></i>
+                    <span>Reply</span>
                 </div>
             </div>
         </div>
