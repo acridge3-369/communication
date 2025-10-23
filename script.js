@@ -3,61 +3,8 @@ let currentUser = null;
 let posts = [];
 let currentFilter = 'all';
 
-// Sample messages for demonstration
-const samplePosts = [
-    {
-        id: 1,
-        title: "Team Meeting Tomorrow",
-        content: "Hi everyone! Just a reminder that we have our weekly team meeting tomorrow at 2 PM. Please prepare your project updates and bring any questions or concerns you'd like to discuss. Looking forward to seeing everyone there!",
-        category: "announcement",
-        author: "Sarah Johnson",
-        authorInitial: "SJ",
-        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-        likes: 8,
-        comments: 3,
-        tags: ["meeting", "team", "reminder"],
-        liked: false
-    },
-    {
-        id: 2,
-        title: "New Project Ideas Discussion",
-        content: "I've been thinking about some new project ideas for our upcoming quarter. Would love to get everyone's input on potential features we could develop. Let's brainstorm together!",
-        category: "idea",
-        author: "Mike Chen",
-        authorInitial: "MC",
-        timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
-        likes: 12,
-        comments: 7,
-        tags: ["projects", "brainstorming", "ideas"],
-        liked: false
-    },
-    {
-        id: 3,
-        title: "Question about the New System",
-        content: "Has anyone had a chance to test the new communication system yet? I'm having some issues with the message notifications. Any tips or solutions would be greatly appreciated!",
-        category: "question",
-        author: "Emily Rodriguez",
-        authorInitial: "ER",
-        timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000), // 6 hours ago
-        likes: 5,
-        comments: 4,
-        tags: ["technical", "help", "system"],
-        liked: false
-    },
-    {
-        id: 4,
-        title: "Great work on the presentation!",
-        content: "Just wanted to say great job to everyone who worked on yesterday's client presentation. The feedback was overwhelmingly positive, and they're excited to move forward with the project. Well done team!",
-        category: "general",
-        author: "David Kim",
-        authorInitial: "DK",
-        timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000), // 8 hours ago
-        likes: 15,
-        comments: 6,
-        tags: ["success", "teamwork", "celebration"],
-        liked: false
-    }
-];
+// Start with empty messages array - users can add their own
+const samplePosts = [];
 
 // Valid credentials
 const validCredentials = {
@@ -71,21 +18,32 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeApp() {
-    // Load sample posts
+    // Load sample posts (empty for clean start)
     posts = [...samplePosts];
     
     // Set up event listeners
     setupEventListeners();
     
-    // Initialize UI
-    updateUI();
+    // Initialize UI - show main content immediately
+    showMainContent();
 }
 
 function setupEventListeners() {
     // Navigation
     document.getElementById('loginBtn').addEventListener('click', () => openModal('authModal'));
     document.getElementById('signupBtn').addEventListener('click', () => openModal('authModal'));
-    document.getElementById('getStartedBtn').addEventListener('click', () => openModal('authModal'));
+    document.getElementById('getStartedBtn').addEventListener('click', () => {
+        document.getElementById('mainContent').scrollIntoView({ behavior: 'smooth' });
+    });
+    
+    // Add event listener for "View Messages" button
+    document.querySelectorAll('.btn-outline.btn-large').forEach(btn => {
+        if (btn.textContent.includes('View Messages')) {
+            btn.addEventListener('click', () => {
+                document.getElementById('mainContent').scrollIntoView({ behavior: 'smooth' });
+            });
+        }
+    });
     
     // Auth forms
     document.getElementById('loginForm').addEventListener('submit', handleLogin);
@@ -242,11 +200,6 @@ function handleSignup(e) {
 function handleCreatePost(e) {
     e.preventDefault();
     
-    if (!currentUser) {
-        alert('Please login to create a post');
-        return;
-    }
-    
     const title = document.getElementById('postTitle').value;
     const category = document.getElementById('postCategory').value;
     const content = document.getElementById('postContent').value;
@@ -258,8 +211,8 @@ function handleCreatePost(e) {
         title: title,
         content: content,
         category: category,
-        author: currentUser.name,
-        authorInitial: currentUser.initial,
+        author: currentUser ? currentUser.name : "Guest User",
+        authorInitial: currentUser ? currentUser.initial : "G",
         timestamp: new Date(),
         likes: 0,
         comments: 0,
@@ -274,7 +227,7 @@ function handleCreatePost(e) {
     
     closeModal('createPostModal');
     renderPosts();
-    showNotification('Post created successfully!', 'success');
+    showNotification('Message posted successfully!', 'success');
 }
 
 function filterPosts(category) {
@@ -321,9 +274,12 @@ function renderPosts() {
     if (filteredPosts.length === 0) {
         container.innerHTML = `
             <div class="text-center" style="padding: 40px; color: #64748b;">
-                <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 20px;"></i>
-                <h3>No posts found</h3>
-                <p>Be the first to share an idea, plan, or goal!</p>
+                <i class="fas fa-comments" style="font-size: 3rem; margin-bottom: 20px; color: #4f46e5;"></i>
+                <h3>Welcome to ConnectHub!</h3>
+                <p>This is a clean, open communication platform. Be the first to start a conversation!</p>
+                <button class="btn btn-primary" onclick="document.getElementById('createPostBtn').click()" style="margin-top: 20px;">
+                    <i class="fas fa-plus"></i> Post First Message
+                </button>
             </div>
         `;
         return;
@@ -388,11 +344,6 @@ function createPostHTML(post) {
 }
 
 function handleLike(postId) {
-    if (!currentUser) {
-        alert('Please login to like posts');
-        return;
-    }
-    
     const post = posts.find(p => p.id == postId);
     if (post) {
         if (post.liked) {
@@ -407,11 +358,6 @@ function handleLike(postId) {
 }
 
 function handleComment(postId) {
-    if (!currentUser) {
-        alert('Please login to comment');
-        return;
-    }
-    
     const comment = prompt('Add a comment:');
     if (comment && comment.trim()) {
         const post = posts.find(p => p.id == postId);
@@ -434,6 +380,31 @@ function getTimeAgo(timestamp) {
     if (minutes < 60) return `${minutes}m ago`;
     if (hours < 24) return `${hours}h ago`;
     return `${days}d ago`;
+}
+
+function showMainContent() {
+    const mainContent = document.getElementById('mainContent');
+    const navAuth = document.querySelector('.nav-auth');
+    
+    // Always show main content - no login required
+    mainContent.style.display = 'block';
+    
+    // Update navigation to show user is logged in as Guest
+    navAuth.innerHTML = `
+        <span class="user-info">
+            <div class="user-avatar">G</div>
+            <span>Guest User</span>
+        </span>
+        <button class="btn btn-outline" onclick="openModal('authModal')">Login</button>
+    `;
+    
+    // Render posts
+    renderPosts();
+    
+    // Scroll to main content after a short delay
+    setTimeout(() => {
+        mainContent.scrollIntoView({ behavior: 'smooth' });
+    }, 500);
 }
 
 function updateUI() {
@@ -459,18 +430,8 @@ function updateUI() {
         // Scroll to main content
         mainContent.scrollIntoView({ behavior: 'smooth' });
     } else {
-        // Hide main content
-        mainContent.style.display = 'none';
-        
-        // Show login/signup buttons
-        navAuth.innerHTML = `
-            <button class="btn btn-outline" id="loginBtn">Login</button>
-            <button class="btn btn-primary" id="signupBtn">Sign Up</button>
-        `;
-        
-        // Re-attach event listeners
-        document.getElementById('loginBtn').addEventListener('click', () => openModal('authModal'));
-        document.getElementById('signupBtn').addEventListener('click', () => openModal('authModal'));
+        // Show main content with guest access
+        showMainContent();
     }
 }
 
