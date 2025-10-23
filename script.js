@@ -3,8 +3,58 @@ let currentUser = null;
 let posts = [];
 let currentFilter = 'all';
 
-// Start with empty messages array - users can add their own
-const samplePosts = [];
+// Load posts from localStorage or start with empty array
+function loadPostsFromStorage() {
+    const savedPosts = localStorage.getItem('connecthub_posts');
+    if (savedPosts) {
+        try {
+            const parsedPosts = JSON.parse(savedPosts);
+            // Convert timestamp strings back to Date objects
+            return parsedPosts.map(post => ({
+                ...post,
+                timestamp: new Date(post.timestamp)
+            }));
+        } catch (error) {
+            console.error('Error loading posts from storage:', error);
+            return [];
+        }
+    }
+    return [];
+}
+
+// Save posts to localStorage
+function savePostsToStorage() {
+    try {
+        localStorage.setItem('connecthub_posts', JSON.stringify(posts));
+        console.log('Posts saved to localStorage');
+    } catch (error) {
+        console.error('Error saving posts to storage:', error);
+    }
+}
+
+// Clear all posts (for testing or reset)
+function clearAllPosts() {
+    if (confirm('Are you sure you want to clear all messages? This action cannot be undone.')) {
+        posts = [];
+        savePostsToStorage();
+        renderPosts();
+        showNotification('All messages cleared', 'info');
+    }
+}
+
+// Add clear button functionality (optional - for testing)
+function addClearButton() {
+    const sidebar = document.querySelector('.sidebar');
+    if (sidebar && !document.getElementById('clearBtn')) {
+        const clearBtn = document.createElement('button');
+        clearBtn.id = 'clearBtn';
+        clearBtn.className = 'btn btn-outline btn-full';
+        clearBtn.style.marginTop = '10px';
+        clearBtn.innerHTML = '<i class="fas fa-trash"></i> Clear All';
+        clearBtn.onclick = clearAllPosts;
+        sidebar.appendChild(clearBtn);
+    }
+}
 
 // Valid credentials
 const validCredentials = {
@@ -18,8 +68,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeApp() {
-    // Load sample posts (empty for clean start)
-    posts = [...samplePosts];
+    // Load posts from localStorage
+    posts = loadPostsFromStorage();
     
     // Set up event listeners
     setupEventListeners();
@@ -222,6 +272,9 @@ function handleCreatePost(e) {
     
     posts.unshift(newPost);
     
+    // Save to localStorage
+    savePostsToStorage();
+    
     // Clear form
     document.getElementById('createPostForm').reset();
     
@@ -277,6 +330,9 @@ function renderPosts() {
                 <i class="fas fa-comments" style="font-size: 3rem; margin-bottom: 20px; color: #4f46e5;"></i>
                 <h3>Welcome to ConnectHub!</h3>
                 <p>This is a clean, open communication platform. Be the first to start a conversation!</p>
+                <p style="font-size: 0.9rem; color: #9ca3af; margin-top: 10px;">
+                    <i class="fas fa-save"></i> Your messages are automatically saved
+                </p>
                 <button class="btn btn-primary" onclick="document.getElementById('createPostBtn').click()" style="margin-top: 20px;">
                     <i class="fas fa-plus"></i> Post First Message
                 </button>
@@ -353,6 +409,10 @@ function handleLike(postId) {
             post.likes++;
             post.liked = true;
         }
+        
+        // Save to localStorage
+        savePostsToStorage();
+        
         renderPosts();
     }
 }
@@ -363,6 +423,10 @@ function handleComment(postId) {
         const post = posts.find(p => p.id == postId);
         if (post) {
             post.comments++;
+            
+            // Save to localStorage
+            savePostsToStorage();
+            
             renderPosts();
             showNotification('Comment added!', 'success');
         }
@@ -400,6 +464,9 @@ function showMainContent() {
     
     // Render posts
     renderPosts();
+    
+    // Add clear button for testing (optional)
+    addClearButton();
     
     // Scroll to main content after a short delay
     setTimeout(() => {
