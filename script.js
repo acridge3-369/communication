@@ -1,4 +1,4 @@
-// Global variables
+// Global variables - ConnectHub Communication Platform
 let currentUser = null;
 let posts = [];
 let currentFilter = 'all';
