@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConnectHub - Share Ideas, Plans & Goals</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2><i class="fas fa-users"></i> ConnectHub</h2>
+            </div>
+            <div class="nav-menu">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#explore" class="nav-link">Explore</a>
+                <a href="#create" class="nav-link">Create</a>
+                <a href="#profile" class="nav-link">Profile</a>
+            </div>
+            <div class="nav-auth">
+                <button class="btn btn-outline" id="loginBtn">Login</button>
+                <button class="btn btn-primary" id="signupBtn">Sign Up</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Connect, Share, and Grow Together</h1>
+            <p>Share your ideas, plans, and goals with a community of like-minded individuals. Get feedback, collaborate, and turn your dreams into reality.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary btn-large" id="getStartedBtn">Get Started</button>
+                <button class="btn btn-outline btn-large">Learn More</button>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div class="floating-cards">
+                <div class="card idea-card">
+                    <i class="fas fa-lightbulb"></i>
+                    <h4>Share Ideas</h4>
+                </div>
+                <div class="card plan-card">
+                    <i class="fas fa-project-diagram"></i>
+                    <h4>Create Plans</h4>
+                </div>
+                <div class="card goal-card">
+                    <i class="fas fa-trophy"></i>
+                    <h4>Achieve Goals</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Why Choose ConnectHub?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3>Collaborative Discussions</h3>
+                    <p>Engage in meaningful conversations and get valuable feedback on your ideas and plans.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Smart Discovery</h3>
+                    <p>Find relevant content and connect with people who share your interests and goals.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Safe Environment</h3>
+                    <p>Share your thoughts in a supportive, respectful community focused on growth and positivity.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Progress Tracking</h3>
+                    <p>Track your goals and celebrate milestones with the community's support.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Area -->
+    <main class="main-content" id="mainContent" style="display: none;">
+        <div class="container">
+            <div class="content-layout">
+                <!-- Sidebar -->
+                <aside class="sidebar">
+                    <div class="sidebar-section">
+                        <h3>Quick Actions</h3>
+                        <button class="btn btn-primary btn-full" id="createPostBtn">
+                            <i class="fas fa-plus"></i> New Post
+                        </button>
+                        <button class="btn btn-outline btn-full" id="searchBtn">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </div>
+                    
+                    <div class="sidebar-section">
+                        <h3>Categories</h3>
+                        <div class="category-list">
+                            <a href="#" class="category-item active" data-category="all">
+                                <i class="fas fa-globe"></i> All Posts
+                            </a>
+                            <a href="#" class="category-item" data-category="ideas">
+                                <i class="fas fa-lightbulb"></i> Ideas
+                            </a>
+                            <a href="#" class="category-item" data-category="plans">
+                                <i class="fas fa-project-diagram"></i> Plans
+                            </a>
+                            <a href="#" class="category-item" data-category="goals">
+                                <i class="fas fa-trophy"></i> Goals
+                            </a>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Feed -->
+                <div class="feed">
+                    <div class="feed-header">
+                        <h2>Recent Posts</h2>
+                        <div class="feed-filters">
+                            <select id="sortBy">
+                                <option value="newest">Newest First</option>
+                                <option value="oldest">Oldest First</option>
+                                <option value="popular">Most Popular</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="postsContainer" class="posts-container">
+                        <!-- Posts will be dynamically loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal for Login/Signup -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="auth-tabs">
+                <button class="tab-btn active" data-tab="login">Login</button>
+                <button class="tab-btn" data-tab="signup">Sign Up</button>
+            </div>
+            
+            <form id="loginForm" class="auth-form active">
+                <h2>Welcome Back</h2>
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Login</button>
+            </form>
+            
+            <form id="signupForm" class="auth-form">
+                <h2>Join ConnectHub</h2>
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupConfirmPassword">Confirm Password</label>
+                    <input type="password" id="signupConfirmPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Sign Up</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for Creating Posts -->
+    <div id="createPostModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Create New Post</h2>
+            <form id="createPostForm">
+                <div class="form-group">
+                    <label for="postTitle">Title</label>
+                    <input type="text" id="postTitle" placeholder="What's your idea, plan, or goal?" required>
+                </div>
+                <div class="form-group">
+                    <label for="postCategory">Category</label>
+                    <select id="postCategory" required>
+                        <option value="">Select a category</option>
+                        <option value="ideas">💡 Ideas</option>
+                        <option value="plans">📋 Plans</option>
+                        <option value="goals">🎯 Goals</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="postContent">Description</label>
+                    <textarea id="postContent" placeholder="Tell us more about your idea, plan, or goal..." rows="6" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="postTags">Tags (optional)</label>
+                    <input type="text" id="postTags" placeholder="e.g., entrepreneurship, fitness, learning">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" id="cancelPostBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Share Post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
