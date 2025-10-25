@@ -1,43 +1,10 @@
-# System files
-AppData/
-.claude/
-.cursor/
-.config/
-.gemini/
-.vscode/
-.gitconfig
-.lesshst
-
-# Node modules
-node_modules/
-
-# Logs
-*.log
-npm-debug.log*
-
-# Runtime data
-pids
-*.pid
-*.seed
-
-# Coverage directory used by tools like istanbul
-coverage/
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Temporary files
-*.tmp
-*.temp
+# Ignore everything except our project files
+*
+!.gitignore
+!index.html
+!about.html
+!messages.html
+!contact.html
+!help.html
+!styles.css
+!messages.js

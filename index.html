@@ -3,238 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ConnectHub - Share Ideas, Plans & Goals</title>
+    <title>ConnectHub - Home</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
-                <h2><i class="fas fa-users"></i> ConnectHub</h2>
+                <h1>ConnectHub</h1>
             </div>
             <div class="nav-menu">
-                <a href="#home" class="nav-link active">Home</a>
-                <a href="#explore" class="nav-link">Explore</a>
-                <a href="#create" class="nav-link">Create</a>
-                <a href="#profile" class="nav-link">Profile</a>
-            </div>
-            <div class="nav-auth">
-                <button class="btn btn-outline" id="loginBtn">Login</button>
-                <button class="btn btn-primary" id="signupBtn">Sign Up</button>
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="messages.html" class="nav-link">Messages</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="help.html" class="nav-link">Help</a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="hero-content">
-            <h1>Welcome to ConnectHub</h1>
-            <p>An open communication platform where ideas flow freely. Share thoughts, ask questions, and connect with others in real-time. Messages are saved globally and accessible from any device!</p>
-            <div class="hero-buttons">
-                <button class="btn btn-primary btn-large" id="getStartedBtn">Start Communicating</button>
-                <button class="btn btn-outline btn-large">View Messages</button>
-            </div>
-        </div>
-        <div class="hero-image">
-                    <div class="floating-cards">
-                        <div class="card idea-card">
-                            <i class="fas fa-comments"></i>
-                            <h4>Open Communication</h4>
-                        </div>
-                        <div class="card plan-card">
-                            <i class="fas fa-users"></i>
-                            <h4>Public Platform</h4>
-                        </div>
-                        <div class="card goal-card">
-                            <i class="fas fa-globe"></i>
-                            <h4>Accessible to All</h4>
-                        </div>
-                    </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="features">
+    <main class="main-content">
         <div class="container">
-            <h2 class="section-title">Why Choose ConnectHub?</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-comments"></i>
-                    </div>
-                    <h3>Open Communication</h3>
-                    <p>Share your thoughts instantly without any barriers. Everyone can participate and contribute to the conversation.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-globe"></i>
-                    </div>
-                    <h3>Global Access</h3>
-                    <p>No login required! Messages are saved globally and accessible from any computer or device worldwide.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <h3>Community Driven</h3>
-                    <p>Join a supportive community where ideas are shared freely and collaboration happens naturally.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <h3>Cross-Device Sync</h3>
-                    <p>Access your messages from any computer, tablet, or phone. All data is synchronized globally in real-time.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+            <section class="hero">
+                <h1>Welcome to ConnectHub</h1>
+                <p>A simple communication platform for sharing ideas and connecting with others.</p>
+                <a href="messages.html" class="btn">Start Communicating</a>
+            </section>
 
-    <!-- Main Content Area -->
-    <main class="main-content" id="mainContent">
-        <div class="container">
-            <div class="content-layout">
-                <!-- Sidebar -->
-                <aside class="sidebar">
-                    <div class="sidebar-section">
-                        <h3>Quick Actions</h3>
-                        <button class="btn btn-primary btn-full" id="createPostBtn">
-                            <i class="fas fa-plus"></i> New Message
-                        </button>
-                        <button class="btn btn-outline btn-full" id="searchBtn">
-                            <i class="fas fa-search"></i> Search
-                        </button>
+            <section class="features">
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3>Simple</h3>
+                        <p>Easy to use interface</p>
                     </div>
-                    
-                    <div class="sidebar-section">
-                        <h3>Message Types</h3>
-                        <div class="category-list">
-                            <a href="#" class="category-item active" data-category="all">
-                                <i class="fas fa-globe"></i> All Messages
-                            </a>
-                            <a href="#" class="category-item" data-category="general">
-                                <i class="fas fa-comments"></i> General
-                            </a>
-                            <a href="#" class="category-item" data-category="announcement">
-                                <i class="fas fa-bullhorn"></i> Announcements
-                            </a>
-                            <a href="#" class="category-item" data-category="question">
-                                <i class="fas fa-question-circle"></i> Questions
-                            </a>
-                            <a href="#" class="category-item" data-category="idea">
-                                <i class="fas fa-lightbulb"></i> Ideas
-                            </a>
-                        </div>
+                    <div class="feature-card">
+                        <h3>Fast</h3>
+                        <p>Quick message sharing</p>
                     </div>
-                </aside>
-
-                <!-- Communication Feed -->
-                <div class="feed">
-                    <div class="feed-header">
-                        <h2>Communication Hub</h2>
-                        <div class="feed-filters">
-                            <select id="sortBy">
-                                <option value="newest">Newest First</option>
-                                <option value="oldest">Oldest First</option>
-                                <option value="popular">Most Popular</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div id="postsContainer" class="posts-container">
-                        <!-- Messages will be dynamically loaded here -->
+                    <div class="feature-card">
+                        <h3>Global</h3>
+                        <p>Access from anywhere</p>
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
     </main>
 
-    <!-- Modal for Login/Signup -->
-    <div id="authModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div class="auth-tabs">
-                <button class="tab-btn active" data-tab="login">Login</button>
-                <button class="tab-btn" data-tab="signup">Sign Up</button>
-            </div>
-            
-            <form id="loginForm" class="auth-form active">
-                <h2>Welcome Back</h2>
-                <div class="form-group">
-                    <label for="loginEmail">Username</label>
-                    <input type="text" id="loginEmail" placeholder="Enter your username" required>
-                </div>
-                <div class="form-group">
-                    <label for="loginPassword">Password</label>
-                    <input type="password" id="loginPassword" placeholder="Enter your password" required>
-                </div>
-                <button type="submit" class="btn btn-primary btn-full">Login</button>
-                <div class="login-hint">
-                    <p><small>Hint: Use "username" and "Interesting123-" as credentials</small></p>
-                </div>
-            </form>
-            
-            <form id="signupForm" class="auth-form">
-                <h2>Join ConnectHub</h2>
-                <div class="form-group">
-                    <label for="signupName">Full Name</label>
-                    <input type="text" id="signupName" required>
-                </div>
-                <div class="form-group">
-                    <label for="signupEmail">Email</label>
-                    <input type="email" id="signupEmail" required>
-                </div>
-                <div class="form-group">
-                    <label for="signupPassword">Password</label>
-                    <input type="password" id="signupPassword" required>
-                </div>
-                <div class="form-group">
-                    <label for="signupConfirmPassword">Confirm Password</label>
-                    <input type="password" id="signupConfirmPassword" required>
-                </div>
-                <button type="submit" class="btn btn-primary btn-full">Sign Up</button>
-            </form>
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 ConnectHub. All rights reserved.</p>
         </div>
-    </div>
-
-    <!-- Modal for Creating Posts -->
-    <div id="createPostModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Create New Message</h2>
-            <form id="createPostForm">
-                <div class="form-group">
-                    <label for="postTitle">Message Title</label>
-                    <input type="text" id="postTitle" placeholder="What's your message about?" required>
-                </div>
-                <div class="form-group">
-                    <label for="postCategory">Message Type</label>
-                    <select id="postCategory" required>
-                        <option value="">Select message type</option>
-                        <option value="general">💬 General Message</option>
-                        <option value="announcement">📢 Announcement</option>
-                        <option value="question">❓ Question</option>
-                        <option value="idea">💡 Idea</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="postContent">Message Content</label>
-                    <textarea id="postContent" placeholder="Type your message here..." rows="6" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="postTags">Tags (optional)</label>
-                    <input type="text" id="postTags" placeholder="e.g., urgent, team, project">
-                </div>
-                <div class="form-actions">
-                    <button type="button" class="btn btn-outline" id="cancelPostBtn">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Send Message</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script src="api-config.js"></script>
-    <script src="script.js"></script>
+    </footer>
 </body>
 </html>
