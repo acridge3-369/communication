@@ -2,9 +2,7 @@
 *
 !.gitignore
 !index.html
-!about.html
-!messages.html
-!contact.html
-!help.html
+!nda.html
+!onboarding.html
+!members.html
 !styles.css
-!messages.js
